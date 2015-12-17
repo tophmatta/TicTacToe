@@ -45,6 +45,19 @@ class ViewController: UIViewController {
             }
         
         }
+        
+        for combination in winningCombinations{
+            print(gameState[combination[0]])
+//            if (gameState[combination[0]] != 0 && gameState[combination[0]] == gameState[combination[1]] && gameState[combination[1]] == gameState[combination[2]]){
+//                
+//                if (gameState[combination[0]] == 1){
+//                    print("Beets win!")
+//                }
+//                else{
+//                    print("Avocados win!")
+//                }
+//            }
+        }
     }
     
     
