@@ -12,6 +12,8 @@ class ViewController: UIViewController {
     
     var activePlayer = 1 // 1 = beets, 2 = avocadOs
     
+    var gameActive = true
+    
     var gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     
     let winningCombinations = [
@@ -23,10 +25,34 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var button: UIButton!
     
+    @IBOutlet weak var gameOverLabel: UILabel!
     
+    @IBOutlet weak var restartGameLabel: UIButton!
+    
+    @IBAction func restartGame(sender: AnyObject) {
+        
+        gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        
+        activePlayer = 1
+        
+        gameActive = true
+        
+        gameOverLabel.hidden = true
+        
+        gameOverLabel.center.y -= view.bounds.height
+        
+        var buttonToClear: UIButton!
+        
+        for var i = 0; i < 9; i++ {
+            buttonToClear = view.viewWithTag(i) as! UIButton
+            
+            buttonToClear.setImage(nil, forState: .Normal)
+        }
+        
+    }
     @IBAction func buttonPressed(sender: AnyObject) {
         
-        if gameState[sender.tag] == 0{
+        if gameState[sender.tag] == 0 && gameActive == true {
             
             gameState[sender.tag] = activePlayer
         
@@ -36,38 +62,71 @@ class ViewController: UIViewController {
                 
                 activePlayer = 2
                 
-            } else {
+            }
+            else {
                 
                 sender.setImage(UIImage(named: "avocado.png"), forState: .Normal)
                 
                 activePlayer = 1
                 
             }
-        
         }
         
         for combination in winningCombinations{
-            print(gameState[combination[0]])
-//            if (gameState[combination[0]] != 0 && gameState[combination[0]] == gameState[combination[1]] && gameState[combination[1]] == gameState[combination[2]]){
-//                
-//                if (gameState[combination[0]] == 1){
-//                    print("Beets win!")
-//                }
-//                else{
-//                    print("Avocados win!")
-//                }
-//            }
+
+            if (gameState[combination[0]] != 0 && gameState[combination[0]] == gameState[combination[1]] && gameState[combination[1]] == gameState[combination[2]]){
+                
+                gameActive = false
+        
+                
+                if (gameState[combination[0]] == 1){
+                    
+                    gameOverLabel.text = "Beets win!"
+                    gameOverLabel.layer.cornerRadius = 10
+                    
+                }
+                else{
+                    
+                    gameOverLabel.text = "Avocados win!"
+                    gameOverLabel.layer.cornerRadius = 10
+                    
+                }
+                
+                gameOverLabel.hidden = false
+                
+                UIView.animateWithDuration(0.5, animations: { () -> Void in
+                    
+                    self.gameOverLabel.center.y += self.view.bounds.height
+                    
+                })
+            }
+            
+            gameActive = false
+            
+            for buttonState in gameState {
+                
+                if buttonState == 0 {
+                    
+                    gameActive = true
+                    
+                }
+                
+            }
         }
     }
     
     
-    
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        gameOverLabel.hidden = true
+        gameOverLabel.center.y -= view.bounds.height
+        gameOverLabel.layer.masksToBounds = true
+        
+        restartGameLabel.layer.cornerRadius = 10
+        restartGameLabel.layer.masksToBounds = true
+        
+        
     }
     
     override func didReceiveMemoryWarning() {
